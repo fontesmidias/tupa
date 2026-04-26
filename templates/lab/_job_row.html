@@ -1,0 +1,32 @@
+{% load i18n %}<li id="job-{{ log.id }}"
+    class="flex items-center gap-3 py-3 text-sm"
+    {% if log.status == "pending" or log.status == "running" %}
+      hx-get="{% url 'ai_lab_status' log.id %}"
+      hx-trigger="load delay:2s"
+      hx-swap="outerHTML"
+      hx-target="this"
+    {% endif %}>
+  <span class="w-24 font-mono text-xs text-gray-500">{{ log.created_at|date:"H:i:s" }}</span>
+  <span class="w-56 truncate">{{ log.pdf_filename|default:"—" }}</span>
+  <span class="w-24">
+    {% if log.status == "ready" %}
+      <span class="rounded bg-green-100 px-2 py-0.5 text-green-800">pronto</span>
+    {% elif log.status == "failed" %}
+      <span class="rounded bg-red-100 px-2 py-0.5 text-red-800">falhou</span>
+    {% elif log.status == "running" %}
+      <span class="rounded bg-amber-100 px-2 py-0.5 text-amber-800">executando…</span>
+    {% else %}
+      <span class="rounded bg-gray-100 px-2 py-0.5 text-gray-700">na fila…</span>
+    {% endif %}
+  </span>
+  <span class="w-16 text-right">
+    {% if log.confidence is not None %}{{ log.confidence|floatformat:2 }}{% else %}—{% endif %}
+  </span>
+  <span class="w-20 text-right text-gray-500">
+    {% if log.latency_ms %}{{ log.latency_ms }}ms{% else %}—{% endif %}
+  </span>
+  <span class="w-24 text-right text-gray-500">
+    {% if log.cost_usd %}${{ log.cost_usd|floatformat:4 }}{% else %}—{% endif %}
+  </span>
+  <a href="{% url 'ai_lab_detail' log.id %}" class="ml-auto text-blue-600 underline">detalhe</a>
+</li>

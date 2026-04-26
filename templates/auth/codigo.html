@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <title>Informe o código — gestao-vagas</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body class="bg-gray-50">
+  <main class="mx-auto max-w-md px-4 py-10">
+    <h1 class="mb-6 text-2xl font-semibold">Informe o código</h1>
+    <p class="mb-4 text-sm text-gray-700">
+      Enviamos um código de 6 dígitos para <strong>{{ email }}</strong>, se o email estiver cadastrado.
+    </p>
+
+    {% if messages %}
+      <ul class="mb-4">
+        {% for msg in messages %}
+          <li class="rounded bg-green-100 p-2 text-sm text-green-800">{{ msg }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    {% if info %}
+      <div class="mb-4 rounded bg-blue-100 p-2 text-sm text-blue-800">{{ info }}</div>
+    {% endif %}
+
+    {% if error %}
+      <div class="mb-4 rounded bg-red-100 p-2 text-sm text-red-800">{{ error }}</div>
+    {% endif %}
+
+    {% if form.errors %}
+      <div class="mb-4 rounded bg-red-100 p-2 text-sm text-red-800">
+        {% for field, errs in form.errors.items %}
+          {% for e in errs %}<div>{{ e }}</div>{% endfor %}
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <form method="post" action="{% url 'accounts:auth_consume_code' %}" class="space-y-4">
+      {% csrf_token %}
+      <input type="hidden" name="email" value="{{ email }}" />
+      <label for="id_code" class="block text-sm font-medium text-gray-700">Código</label>
+      <input
+        type="text"
+        id="id_code"
+        name="code"
+        maxlength="6"
+        inputmode="numeric"
+        pattern="[0-9]{6}"
+        autocomplete="one-time-code"
+        class="w-full rounded border border-gray-300 px-3 py-2"
+      />
+      <button type="submit" class="w-full rounded bg-blue-600 px-4 py-2 text-white">
+        Entrar
+      </button>
+    </form>
+  </main>
+</body>
+</html>

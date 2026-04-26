@@ -1,0 +1,34 @@
+{% load i18n %}<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <title>Lab IA — Histórico</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body class="bg-gray-50">
+  <main class="mx-auto max-w-5xl px-4 py-10">
+    <p class="mb-2 text-sm"><a class="text-blue-600 underline" href="{% url 'ai_lab' %}">&larr; voltar</a></p>
+    <h1 class="mb-4 text-xl font-semibold">Histórico (50 últimos)</h1>
+
+    <form method="get" class="mb-4 flex gap-4 text-sm">
+      <label class="flex items-center gap-1">
+        <input type="checkbox" name="failed" value="1" {% if filter_failed %}checked{% endif %} />
+        Apenas falhas
+      </label>
+      <label class="flex items-center gap-1">
+        <input type="checkbox" name="low_conf" value="1" {% if filter_low_conf %}checked{% endif %} />
+        Confiança &lt; 0.7
+      </label>
+      <button type="submit" class="rounded bg-blue-600 px-3 py-1 text-white">Filtrar</button>
+    </form>
+
+    <ul class="divide-y divide-gray-100 rounded border border-gray-200 bg-white">
+      {% for log in rows %}
+        {% include "lab/_job_row.html" %}
+      {% empty %}
+        <li class="py-3 px-3 text-sm text-gray-500">Nenhum registro.</li>
+      {% endfor %}
+    </ul>
+  </main>
+</body>
+</html>

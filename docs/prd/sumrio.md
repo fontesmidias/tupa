@@ -1,0 +1,16 @@
+# Sumário
+
+- [Executive Summary](#executive-summary)
+- [Project Classification](#project-classification)
+- [Success Criteria](#success-criteria)
+- [Product Scope](#product-scope)
+- [User Journeys](#user-journeys)
+- [Domain-Specific Requirements](#domain-specific-requirements)
+- [Innovation & Novel Patterns](#innovation--novel-patterns)
+- [Web Application + Async Workers — Technical Requirements](#web-application--async-workers--technical-requirements)
+- [Project Scoping & Phased Development](#project-scoping--phased-development)
+- [Functional Requirements](#functional-requirements)
+- [Non-Functional Requirements](#non-functional-requirements)
+- [Appendix A — Matriz de Rastreabilidade](#appendix-a--matriz-de-rastreabilidade-jornada--fr--nfr)
+- [Appendix B — Pendências DPO / Jurídico](#appendix-b--pendências-dpo--jurídico)
+- [Appendix C — Changelog](#appendix-c--changelog-deste-prd)

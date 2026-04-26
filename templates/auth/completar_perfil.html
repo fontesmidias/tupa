@@ -1,0 +1,44 @@
+{% load i18n %}<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <title>Completar perfil — gestao-vagas</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body class="bg-gray-50">
+  <main class="mx-auto max-w-md px-4 py-10">
+    <h1 class="mb-6 text-2xl font-semibold">Confirme seu cadastro</h1>
+    <p class="mb-4 text-sm text-gray-700">Preenchemos alguns campos para você. Confirme ou ajuste.</p>
+
+    <form method="post" action="{% url 'accounts:accounts_complete_profile' %}{% if next %}?next={{ next }}{% endif %}" class="space-y-4">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ next }}" />
+
+      <div>
+        <label for="{{ form.nome.id_for_label }}" class="block text-sm font-medium text-gray-700">Nome</label>
+        {{ form.nome }}
+        {% if form.nome.errors %}<p class="mt-1 text-sm text-red-600">{{ form.nome.errors.0 }}</p>{% endif %}
+      </div>
+
+      <div>
+        <label for="{{ form.tipo_gestor.id_for_label }}" class="block text-sm font-medium text-gray-700">Tipo de gestor</label>
+        {{ form.tipo_gestor }}
+        {% if form.tipo_gestor.errors %}<p class="mt-1 text-sm text-red-600">{{ form.tipo_gestor.errors.0 }}</p>{% endif %}
+      </div>
+
+      <div>
+        <label for="{{ form.tomador.id_for_label }}" class="block text-sm font-medium text-gray-700">Tomador</label>
+        {{ form.tomador }}
+        {% if form.tomador.errors %}<p class="mt-1 text-sm text-red-600">{{ form.tomador.errors.0 }}</p>{% endif %}
+      </div>
+
+      <button type="submit" class="w-full rounded bg-blue-600 px-4 py-2 text-white">
+        Salvar e continuar
+      </button>
+      <button type="submit" name="skip" value="1" class="w-full rounded border border-gray-300 bg-white px-4 py-2 text-gray-700">
+        Pular por enquanto
+      </button>
+    </form>
+  </main>
+</body>
+</html>

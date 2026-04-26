@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <title>MFA challenge — gestao-vagas</title>
+</head>
+<body class="p-6">
+  <h1 class="text-2xl mb-4">Verificação MFA</h1>
+  <p>Digite o código do seu aplicativo autenticador.</p>
+  <form method="post">
+    {% csrf_token %}
+    <label>Código: <input type="text" name="code" maxlength="6" inputmode="numeric" autocomplete="one-time-code" required autofocus></label>
+    {% if error %}<p class="text-red-700">{{ error }}</p>{% endif %}
+    <button type="submit">Verificar</button>
+  </form>
+</body>
+</html>
