@@ -1,0 +1,71 @@
+{% load i18n %}<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <title>{{ req.titulo }} — Requisição</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body class="bg-gray-50">
+  <main class="mx-auto max-w-3xl px-4 py-10">
+    <nav class="mb-6 text-sm">
+      <a href="{% url 'requisicoes_list' %}" class="text-blue-600 underline">← Requisições</a>
+    </nav>
+
+    {% if messages %}
+      {% for m in messages %}
+        <p class="mb-3 rounded p-3 text-sm {% if m.tags == 'error' %}bg-red-50 text-red-700{% else %}bg-green-50 text-green-700{% endif %}">{{ m }}</p>
+      {% endfor %}
+    {% endif %}
+
+    <h1 class="mb-2 text-2xl font-semibold">{{ req.titulo }}</h1>
+    <p class="mb-6 text-sm text-gray-600">
+      Status: <span class="font-medium">{{ req.get_status_display }}</span>
+      {% if req.score_confianca %} · Confiança IA: <span class="font-medium">{{ req.score_confianca|floatformat:2 }}</span>{% endif %}
+      · Criado em {{ req.created_at|date:"d/m/Y H:i" }} por {{ req.criado_por.email }}
+    </p>
+
+    {% if vaga %}
+      <p class="mb-6 rounded bg-blue-50 p-3 text-sm text-blue-800">
+        Esta requisição já virou vaga:
+        <a href="{% url 'vaga_detail' vaga_id=vaga.pk %}" class="font-medium underline">{{ vaga.titulo }}</a>
+        ({{ vaga.get_status_display }})
+      </p>
+    {% endif %}
+
+    <section class="mb-6 rounded border border-gray-200 bg-white p-4">
+      <h2 class="mb-2 font-medium">Descrição</h2>
+      <p class="whitespace-pre-line text-sm text-gray-800">{{ req.descricao|default:"—" }}</p>
+    </section>
+
+    <section class="mb-6 rounded border border-gray-200 bg-white p-4">
+      <h2 class="mb-2 font-medium">Payload IA</h2>
+      <pre class="overflow-auto rounded bg-gray-50 p-3 text-xs text-gray-800">{{ req.payload_ia|pprint }}</pre>
+    </section>
+
+    {% if req.motivo_rejeicao %}
+      <section class="mb-6 rounded border border-red-200 bg-red-50 p-4">
+        <h2 class="mb-2 font-medium text-red-800">Motivo da rejeição</h2>
+        <p class="whitespace-pre-line text-sm text-red-800">{{ req.motivo_rejeicao }}</p>
+      </section>
+    {% endif %}
+
+    {% if req.status == 'revisao' %}
+      <section class="space-y-4">
+        <form method="post" action="{% url 'requisicao_aprovar' req_id=req.pk %}">
+          {% csrf_token %}
+          <button type="submit" class="rounded bg-green-600 px-4 py-2 text-sm text-white">
+            Aprovar e criar Vaga
+          </button>
+        </form>
+
+        <form method="post" action="{% url 'requisicao_rejeitar' req_id=req.pk %}" class="rounded border border-gray-200 bg-white p-4">
+          {% csrf_token %}
+          <label class="mb-2 block text-sm font-medium">Rejeitar com motivo</label>
+          <textarea name="motivo" rows="3" required class="w-full rounded border border-gray-300 p-2 text-sm"></textarea>
+          <button type="submit" class="mt-2 rounded bg-red-600 px-4 py-2 text-sm text-white">Rejeitar</button>
+        </form>
+      </section>
+    {% endif %}
+  </main>
+</body>
+</html>

@@ -32,6 +32,22 @@
       </section>
     {% endif %}
 
+    {% if log.status == 'ready' and log.parsed_ok %}
+      <section class="mb-4 rounded border border-green-200 bg-green-50 p-4">
+        <h2 class="mb-2 font-medium text-green-800">Promover a Requisição</h2>
+        <p class="mb-3 text-sm text-green-700">
+          Cria uma Requisição em estado <em>revisão</em> a partir desta extração.
+          O RH pode editar e aprovar para virar Vaga ativa.
+        </p>
+        <form method="post" action="{% url 'requisicao_promover_de_extracao' log_id=log.pk %}">
+          {% csrf_token %}
+          <button type="submit" class="rounded bg-green-600 px-4 py-2 text-sm text-white">
+            Criar Requisição
+          </button>
+        </form>
+      </section>
+    {% endif %}
+
     <section class="rounded border border-gray-200 bg-white p-4">
       <h2 class="mb-2 font-medium">Anotações</h2>
       <form method="post" class="space-y-2">

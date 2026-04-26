@@ -6,6 +6,8 @@ from django.urls import include, path
 from apps.accounts.urls import root_urlpatterns as accounts_root_urls
 from apps.ai_providers.urls import root_urlpatterns as ai_lab_root_urls
 from apps.core.views import hello
+from apps.requisitions.urls import root_urlpatterns as requisitions_root_urls
+from apps.vagas.urls import root_urlpatterns as vagas_root_urls
 
 urlpatterns = [
     path("", hello, name="home"),
@@ -14,4 +16,6 @@ urlpatterns = [
     path("politicas/", include("apps.policies.urls")),
     *accounts_root_urls,
     *ai_lab_root_urls,
+    *requisitions_root_urls,
+    *vagas_root_urls,
 ]

@@ -1,7 +1,11 @@
 # 🔀 HANDOFF — Continuação em nova janela de contexto
 
-**Data:** 2026-04-22 (atualização 3 — fim do dia, pós-smoke test OpenAI)
+**Data:** 2026-04-26 (atualização 4 — pós-smoke v3, repo criado, mudança de rota)
 **Motivo:** janela longa; abrir nova sessão para continuar com contexto limpo.
+
+> **MUDANÇA DE ROTA 2026-04-26:** Bruno explicitou que estamos travados polindo prompt em corpus sintético sem rodar com PDFs reais. **Gate H1 formal abandonado.** Foco agora: usar `/lab/ia/` com PDFs reais que Bruno tem na caixa, destravar Lotes 3-4 (Epics 5-14), começar pelo Epic 5 (Vagas) como consumidor natural do AiExtractionLog. Não esperar mais a Rodada 2 do Cowork.
+>
+> **Repo:** github.com/fontesmidias/tupa (BSL 1.1, codinome Tupã). Commit inicial em branch `bootstrap` aguardando merge para `main`.
 
 ---
 

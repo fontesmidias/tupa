@@ -1,0 +1,53 @@
+{% load i18n %}<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <title>Requisições — RH</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body class="bg-gray-50">
+  <main class="mx-auto max-w-5xl px-4 py-10">
+    <h1 class="mb-6 text-2xl font-semibold">Requisições de Pessoal</h1>
+
+    <nav class="mb-6 flex gap-3 text-sm">
+      <a href="{% url 'ai_lab' %}" class="text-blue-600 underline">Lab IA</a>
+      <a href="{% url 'requisicoes_list' %}" class="text-blue-600 underline">Requisições</a>
+      <a href="{% url 'vagas_list' %}" class="text-blue-600 underline">Vagas</a>
+    </nav>
+
+    <section class="mb-6 flex gap-2 text-sm">
+      <a href="{% url 'requisicoes_list' %}"
+         class="rounded border px-3 py-1 {% if not status_filter %}bg-blue-600 text-white{% else %}bg-white text-gray-700{% endif %}">Todas</a>
+      {% for value, label in status_choices %}
+        <a href="{% url 'requisicoes_list' %}?status={{ value }}"
+           class="rounded border px-3 py-1 {% if status_filter == value %}bg-blue-600 text-white{% else %}bg-white text-gray-700{% endif %}">{{ label }}</a>
+      {% endfor %}
+    </section>
+
+    <table class="w-full overflow-hidden rounded border border-gray-200 bg-white text-sm">
+      <thead class="bg-gray-100 text-left text-xs uppercase text-gray-600">
+        <tr>
+          <th class="px-3 py-2">Título</th>
+          <th class="px-3 py-2">Status</th>
+          <th class="px-3 py-2">Confiança</th>
+          <th class="px-3 py-2">Criado em</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        {% for r in requisicoes %}
+          <tr>
+            <td class="px-3 py-2">
+              <a href="{% url 'requisicao_detail' req_id=r.pk %}" class="text-blue-600 hover:underline">{{ r.titulo }}</a>
+            </td>
+            <td class="px-3 py-2">{{ r.get_status_display }}</td>
+            <td class="px-3 py-2">{% if r.score_confianca %}{{ r.score_confianca|floatformat:2 }}{% else %}—{% endif %}</td>
+            <td class="px-3 py-2 text-gray-500">{{ r.created_at|date:"d/m/Y H:i" }}</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="4" class="px-3 py-6 text-center text-gray-500">Nenhuma requisição.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </main>
+</body>
+</html>

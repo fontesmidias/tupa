@@ -1,0 +1,53 @@
+{% load i18n %}<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <title>Vagas — RH</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body class="bg-gray-50">
+  <main class="mx-auto max-w-5xl px-4 py-10">
+    <h1 class="mb-6 text-2xl font-semibold">Vagas</h1>
+
+    <nav class="mb-6 flex gap-3 text-sm">
+      <a href="{% url 'ai_lab' %}" class="text-blue-600 underline">Lab IA</a>
+      <a href="{% url 'requisicoes_list' %}" class="text-blue-600 underline">Requisições</a>
+      <a href="{% url 'vagas_list' %}" class="text-blue-600 underline">Vagas</a>
+    </nav>
+
+    <section class="mb-6 flex gap-2 text-sm">
+      <a href="{% url 'vagas_list' %}"
+         class="rounded border px-3 py-1 {% if not status_filter %}bg-blue-600 text-white{% else %}bg-white text-gray-700{% endif %}">Todas</a>
+      {% for value, label in status_choices %}
+        <a href="{% url 'vagas_list' %}?status={{ value }}"
+           class="rounded border px-3 py-1 {% if status_filter == value %}bg-blue-600 text-white{% else %}bg-white text-gray-700{% endif %}">{{ label }}</a>
+      {% endfor %}
+    </section>
+
+    <table class="w-full overflow-hidden rounded border border-gray-200 bg-white text-sm">
+      <thead class="bg-gray-100 text-left text-xs uppercase text-gray-600">
+        <tr>
+          <th class="px-3 py-2">Título</th>
+          <th class="px-3 py-2">Tomador</th>
+          <th class="px-3 py-2">Status</th>
+          <th class="px-3 py-2">Publicada</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        {% for v in vagas %}
+          <tr>
+            <td class="px-3 py-2">
+              <a href="{% url 'vaga_detail' vaga_id=v.pk %}" class="text-blue-600 hover:underline">{{ v.titulo }}</a>
+            </td>
+            <td class="px-3 py-2">{{ v.tomador|default:"—" }}</td>
+            <td class="px-3 py-2">{{ v.get_status_display }}</td>
+            <td class="px-3 py-2 text-gray-500">{{ v.publicada_em|date:"d/m/Y H:i"|default:"—" }}</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="4" class="px-3 py-6 text-center text-gray-500">Nenhuma vaga.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </main>
+</body>
+</html>
