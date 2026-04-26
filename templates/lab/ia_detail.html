@@ -1,0 +1,46 @@
+{% load i18n %}<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <title>Lab IA — {{ log.pdf_filename }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body class="bg-gray-50">
+  <main class="mx-auto max-w-3xl px-4 py-10">
+    <p class="mb-2 text-sm"><a class="text-blue-600 underline" href="{% url 'ai_lab' %}">&larr; voltar</a></p>
+    <h1 class="mb-2 text-xl font-semibold">{{ log.pdf_filename }}</h1>
+    <p class="mb-4 text-sm text-gray-500">
+      Status: <strong>{{ log.get_status_display }}</strong>
+      · Modelo: {{ log.model_id|default:"—" }}
+      · Prompt: {{ log.prompt_version|default:"—" }}
+      · Latência: {{ log.latency_ms }}ms
+      · Custo: ${{ cost_usd|floatformat:5 }}
+      · Tokens in/out: {{ log.input_tokens }}/{{ log.output_tokens }}
+    </p>
+
+    {% if log.error_text %}
+      <section class="mb-4 rounded border border-red-200 bg-white p-4">
+        <h2 class="mb-2 font-medium text-red-700">Erro</h2>
+        <pre class="whitespace-pre-wrap text-sm text-red-800">{{ log.error_text }}</pre>
+      </section>
+    {% endif %}
+
+    {% if result_pretty %}
+      <section class="mb-4 rounded border border-gray-200 bg-white p-4">
+        <h2 class="mb-2 font-medium">Resultado estruturado</h2>
+        <pre class="whitespace-pre-wrap text-sm">{{ result_pretty }}</pre>
+      </section>
+    {% endif %}
+
+    <section class="rounded border border-gray-200 bg-white p-4">
+      <h2 class="mb-2 font-medium">Anotações</h2>
+      <form method="post" class="space-y-2">
+        {% csrf_token %}
+        <textarea name="notes" rows="4"
+                  class="w-full rounded border border-gray-300 px-3 py-2 text-sm">{{ log.notes }}</textarea>
+        <button type="submit" class="rounded bg-blue-600 px-4 py-2 text-sm text-white">Salvar</button>
+      </form>
+    </section>
+  </main>
+</body>
+</html>

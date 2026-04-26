@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <title>{{ policy.get_kind_display }} v{{ policy.version }} — gestao-vagas</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body class="bg-gray-50">
+  <main class="mx-auto max-w-3xl px-4 py-10">
+    <h1 class="mb-2 text-2xl font-semibold">
+      {{ policy.get_kind_display }} — v{{ policy.version }}
+    </h1>
+    <p class="mb-6 text-sm text-gray-500">
+      Vigente desde {{ policy.effective_at|date:"d/m/Y" }}
+    </p>
+    <article class="prose whitespace-pre-line">{{ policy.full_text_md }}</article>
+  </main>
+</body>
+</html>

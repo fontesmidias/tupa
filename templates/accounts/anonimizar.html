@@ -1,0 +1,71 @@
+{% load i18n %}<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <title>Anonimizar conta — gestao-vagas</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body class="bg-gray-50">
+  <main class="mx-auto max-w-lg px-4 py-10">
+    <h1 class="mb-4 text-2xl font-semibold text-red-700">Anonimizar minha conta</h1>
+
+    {% if messages %}
+      <ul class="mb-4">
+        {% for message in messages %}
+          <li class="rounded border border-gray-200 bg-white p-3 text-sm">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    {% if anonimizado_em %}
+      <div class="rounded border border-gray-200 bg-white p-4 text-sm">
+        Esta conta já foi anonimizada em {{ anonimizado_em|date:"d/m/Y H:i" }}.
+      </div>
+    {% else %}
+      <section class="rounded border border-red-200 bg-white p-4 text-sm text-gray-700">
+        <p class="mb-2">
+          Ao confirmar, seus dados pessoais (nome, email) serão substituídos por valores anonimizados.
+          Registros de auditoria legal são <strong>preservados</strong> (LGPD Art. 16, II).
+        </p>
+        <p class="mb-4">A operação é <strong>irreversível</strong>.</p>
+
+        {% if error %}
+          <p class="mb-3 rounded bg-red-50 p-2 text-sm text-red-700">{{ error }}</p>
+        {% endif %}
+
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="acao" value="send_link" />
+          <button type="submit" class="rounded bg-amber-600 px-4 py-2 text-sm text-white">
+            {% if link_sent %}Reenviar{% else %}Enviar{% endif %} código para {{ email_masked }}
+          </button>
+        </form>
+
+        <form method="post" class="mt-4 space-y-3">
+          {% csrf_token %}
+          <input type="hidden" name="acao" value="confirm" />
+          <label class="block text-sm">
+            Código recebido por email (6 dígitos)
+            <input name="email_code" inputmode="numeric" maxlength="6" required
+                   class="mt-1 w-full rounded border border-gray-300 px-3 py-2" />
+          </label>
+          {% if mfa_enabled %}
+            <label class="block text-sm">
+              Código TOTP do seu autenticador (dupla verificação)
+              <input name="totp_code" inputmode="numeric" maxlength="6" required
+                     class="mt-1 w-full rounded border border-gray-300 px-3 py-2" />
+            </label>
+          {% endif %}
+          <button type="submit" class="rounded bg-red-600 px-4 py-2 text-sm text-white">
+            Confirmar anonimização
+          </button>
+        </form>
+
+        <p class="mt-4">
+          <a class="text-sm text-gray-600 underline" href="/conta/meus-dados/">Cancelar</a>
+        </p>
+      </section>
+    {% endif %}
+  </main>
+</body>
+</html>

@@ -1,0 +1,81 @@
+name: PR Checks
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    services:
+      postgres:
+        image: pgvector/pgvector:pg15
+        env:
+          POSTGRES_USER: admin
+          POSTGRES_PASSWORD: adminpassword
+          POSTGRES_DB: gestao_vagas_test
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd "pg_isready -U admin -d gestao_vagas_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgres://admin:adminpassword@localhost:5433/gestao_vagas_test
+      REDIS_URL_CACHE: redis://localhost:6379/1
+      REDIS_URL_BROKER: redis://localhost:6379/0
+      SECRET_KEY: ci-insecure-key
+      DEBUG: "False"
+      ALLOWED_HOSTS: localhost,127.0.0.1
+      FIELD_ENCRYPTION_KEY: ci-placeholder-fernet-key
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: "latest"
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Cache mypy
+        uses: actions/cache@v4
+        with:
+          path: .mypy_cache
+          key: mypy-${{ runner.os }}-${{ hashFiles('pyproject.toml', 'uv.lock') }}
+          restore-keys: |
+            mypy-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: uv sync --all-groups
+
+      - name: Ruff check
+        run: uv run ruff check apps config tests
+
+      - name: Ruff format check
+        run: uv run ruff format --check apps config tests
+
+      - name: Mypy
+        run: uv run mypy apps
+
+      - name: Pytest + coverage gate
+        run: uv run pytest --cov=apps --cov-report=term-missing --cov-fail-under=70

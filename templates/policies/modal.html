@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <title>Atualização de Termos — gestao-vagas</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body class="bg-gray-900/60">
+  <div class="fixed inset-0 flex items-center justify-center p-4">
+    <div class="w-full max-w-lg rounded-lg bg-white p-6 shadow-xl">
+      <h1 class="mb-4 text-xl font-semibold">Atualização nas Políticas</h1>
+      <p class="mb-4 text-sm text-gray-700">
+        Revise os resumos abaixo para continuar usando a plataforma:
+      </p>
+
+      {% for pv in pending %}
+        <section class="mb-4 rounded border border-gray-200 p-3">
+          <h2 class="mb-1 font-medium">
+            {{ pv.get_kind_display }} — v{{ pv.version }}
+          </h2>
+          <div class="text-sm text-gray-700 whitespace-pre-line">{{ pv.summary_of_changes_md }}</div>
+          <a class="mt-2 inline-block text-sm text-blue-600 underline"
+             href="/politicas/{{ pv.kind }}/v{{ pv.version }}/">
+            Ver documento completo
+          </a>
+        </section>
+      {% endfor %}
+
+      <div class="mt-4 flex items-center justify-end gap-2">
+        <form method="post" action="/politicas/recusar/">
+          {% csrf_token %}
+          <button type="submit" class="rounded border border-gray-300 px-4 py-2 text-sm text-gray-700">
+            Não aceito
+          </button>
+        </form>
+        <form method="post" action="/politicas/aceitar/">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ next }}" />
+          <button type="submit" class="rounded bg-blue-600 px-4 py-2 text-sm text-white">
+            Aceitar
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

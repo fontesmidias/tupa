@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/cery0/Downloads/**)",
+      "Bash(npx @kayvan/markdown-tree-parser explode _bmad-output/planning-artifacts/prd.md docs/prd/)",
+      "Read(//c/Users/cery0/projetos/gestao-ferias/**)",
+      "Read(//c/Program Files/PostgreSQL//**)",
+      "Read(//c/Program Files \\(x86\\)/**)",
+      "Bash(PGPASSWORD=adminpassword \"/c/Program Files/PostgreSQL/15/bin/psql.exe\" -U admin -h localhost -d postgres -c \"CREATE DATABASE gestao_vagas_dev;\")",
+      "Bash(PGPASSWORD=adminpassword \"/c/Program Files/PostgreSQL/15/bin/psql.exe\" -U admin -h localhost -d gestao_vagas_dev -c \"CREATE EXTENSION IF NOT EXISTS vector;\")"
+    ]
+  }
+}

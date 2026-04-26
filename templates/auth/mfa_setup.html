@@ -1,0 +1,44 @@
+{% load static %}<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <title>MFA — gestao-vagas</title>
+</head>
+<body class="p-6">
+  <h1 class="text-2xl mb-4">Autenticação em dois fatores (MFA)</h1>
+
+  {% if reason == "required" %}
+    <p class="text-amber-700 mb-4">MFA obrigatório — ative antes de continuar.</p>
+  {% endif %}
+
+  {% if messages %}
+    <ul>{% for m in messages %}<li>{{ m }}</li>{% endfor %}</ul>
+  {% endif %}
+
+  {% if setup_mode %}
+    <h2 class="text-xl mb-2">Escaneie o QR code</h2>
+    <img src="data:image/png;base64,{{ qr_base64 }}" alt="QR MFA"/>
+    <p>Ou chave manual: <code>{{ secret }}</code></p>
+    <form method="post" action="?acao=confirmar_ativacao">
+      {% csrf_token %}
+      <label>Código do app: <input type="text" name="code" maxlength="6" inputmode="numeric" required></label>
+      {% if error %}<p class="text-red-700">{{ error }}</p>{% endif %}
+      <button type="submit">Confirmar ativação</button>
+    </form>
+  {% elif mfa_enabled %}
+    <p>Status: <strong>ATIVO</strong></p>
+    <form method="post" action="?acao=desativar">
+      {% csrf_token %}
+      <label>Digite o código TOTP para desativar: <input type="text" name="code" maxlength="6" inputmode="numeric" required></label>
+      {% if error %}<p class="text-red-700">{{ error }}</p>{% endif %}
+      <button type="submit">Desativar MFA</button>
+    </form>
+  {% else %}
+    <p>Status: <strong>DESATIVADO</strong></p>
+    <form method="post" action="?acao=ativar">
+      {% csrf_token %}
+      <button type="submit">Ativar MFA</button>
+    </form>
+  {% endif %}
+</body>
+</html>

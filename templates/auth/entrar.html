@@ -1,0 +1,35 @@
+{% load i18n %}<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <title>Entrar — gestao-vagas</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body class="bg-gray-50">
+  <main class="mx-auto max-w-md px-4 py-10">
+    <h1 class="mb-6 text-2xl font-semibold">Entrar</h1>
+
+    {% if generic_message %}
+      <p class="mb-4 rounded border border-gray-200 bg-white p-3 text-sm text-gray-700">
+        {{ generic_message }}
+      </p>
+    {% endif %}
+
+    <form method="post" action="{% url 'accounts:auth_signin' %}" class="space-y-4">
+      {% csrf_token %}
+      <div>
+        <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-gray-700">
+          {{ form.email.label }}
+        </label>
+        {{ form.email }}
+        {% if form.email.errors %}
+          <p class="mt-1 text-sm text-red-600">{{ generic_message|default:"Email inválido." }}</p>
+        {% endif %}
+      </div>
+      <button type="submit" class="w-full rounded bg-blue-600 px-4 py-2 text-white">
+        Enviar código
+      </button>
+    </form>
+  </main>
+</body>
+</html>
